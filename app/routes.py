@@ -29,15 +29,35 @@ def register_routes(app):
     @app.route("/portfolio-performance")
     def portfolio_performance():
         portfolio_performance_df = calculate_portfolio_performance()
+        portfolio_perf_converted = portfolio_performance_df.copy(deep=True)
 
-        portfolio_performance_dict = portfolio_performance_df.to_dict(orient="records")
-        return jsonify(portfolio_performance_dict)
+        portfolio_perf_converted["date"] = portfolio_perf_converted["date"].dt.strftime("%Y-%m-%d")
+
+        portfolio_performance_dict = portfolio_perf_converted.to_dict(orient="records")
+
+        for row in portfolio_performance_dict:
+            if pd.isna(row["portfolio_return"]):
+                row["portfolio_return"] = None
+        return jsonify({"data": portfolio_performance_dict})
 
     @app.route("/active-return")
     def active_return():
         active_return_df = calculate_active_return()
+        converted_active_return = active_return_df.copy(deep=True)
 
-        active_return_dict = active_return_df.to_dict(orient="records")
-        return jsonify(active_return_dict)
+        converted_active_return["date"] = converted_active_return["date"].dt.strftime("%Y-%m-%d")
+
+        active_return_dict = converted_active_return.to_dict(orient="records")
+
+        #active_return, daily_return, portfolio_return
+        for row in active_return_dict:
+            if pd.isna(row["active_return"]):
+                row["active_return"] = None
+            if pd.isna(row["daily_return"]):
+                row["daily_return"] = None
+            if pd.isna(row["portfolio_return"]):
+                row["portfolio_return"] = None
+
+        return jsonify({"data": active_return_dict})
 
     
