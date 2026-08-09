@@ -1,9 +1,10 @@
 import pandas as pd
 from app.services.load_data import load_data
-
+from app.services.validators import validate_prices
 
 def calculate_market_caps_for_date(target_date):
     constituents_df, prices_df, _ = load_data()
+    validate_prices(prices_df)
 
     daily_prices = prices_df[prices_df["date"] == target_date].copy()
     merged_df = daily_prices.merge(constituents_df, on="ticker", how="inner")

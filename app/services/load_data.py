@@ -1,4 +1,5 @@
 import pandas as pd
+from app.services.validators import validate_prices
 
 def load_data():
     constituents_df = pd.read_csv("data/constituents.csv")
@@ -9,6 +10,7 @@ def load_data():
 
 if __name__ == "__main__":
     constituents_df, prices_df, portfolio_df = load_data()
+    validate_prices(prices_df)
 
     print("CONSTITUENTS")
     print(constituents_df)
