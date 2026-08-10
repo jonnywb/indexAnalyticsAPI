@@ -1,9 +1,13 @@
-from flask import jsonify
+from flask import jsonify, render_template
 import pandas as pd
 
 from app.services.index_calculator import calculate_index_levels, calculate_portfolio_performance, calculate_active_return, calculate_market_caps_for_date
 
 def register_routes(app):
+    @app.route("/")
+    def index():
+        return render_template("index.html")
+
     @app.route("/health")
     def health():
         return jsonify({
