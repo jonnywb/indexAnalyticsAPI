@@ -23,25 +23,102 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
   </head>
   <body>
-    <header>
-      <h1>Index Analytics Dashboard</h1>
-      <p>
-        A small Flask dashboard for viewing index levels, portfolio performance, and active return from sample financial
-        data.
-      </p>
+    <header class="header">
+      <div class="header__inner">
+        <a href="#" class="header__logo" aria-label="Home">
+          <svg viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <rect x="2" y="2" width="24" height="24" rx="6" stroke="currentColor" stroke-width="2" />
+            <text
+              x="14"
+              y="19"
+              text-anchor="middle"
+              font-family="'JetBrains Mono', monospace"
+              font-weight="700"
+              font-size="14"
+              fill="currentColor"
+            >
+              J
+            </text>
+          </svg>
+          jonnywb.dev
+        </a>
+      </div>
     </header>
 
-    <nav>
-      <button id="index-levels-btn">Index Levels</button>
-      <button id="portfolio-performance-btn">Portfolio Performance</button>
-      <button id="active-return-btn">Active Return</button>
-    </nav>
-    <main>
-      <section id="results">Results will appear here</section>
+    <main id="main">
+      <section class="hero">
+        <div class="hero__inner">
+          <h1 class="hero__heading">Index Analytics Dashboard</h1>
+          <p class="hero__desc">
+            A small Flask dashboard for viewing index levels, portfolio performance, and active return from sample
+            financial data.
+          </p>
+        </div>
+      </section>
+      <section class="nav_bar">
+        <nav class="nav">
+          <div>
+            <button id="index-levels-btn" class="nav-btn">Index Levels</button>
+            <button id="portfolio-performance-btn" class="nav-btn">Portfolio Performance</button>
+            <button id="active-return-btn" class="nav-btn">Active Return</button>
+          </div>
+          <div class="nav__controls">
+            <button class="btn table-btn" aria-label="Switch to Table Mode">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-label="Table view"
+              >
+                <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                <path d="M3 10h18"></path>
+                <path d="M9 5v14"></path>
+                <path d="M15 5v14"></path>
+              </svg>
+            </button>
+            <button class="btn graph-btn" aria-label="Switch to Graph Mode">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-label="Graph view"
+              >
+                <path d="M4 19V5"></path>
+                <path d="M4 19h16"></path>
+                <path d="M7 15l4-4 3 2 4-6"></path>
+                <circle cx="7" cy="15" r="1"></circle>
+                <circle cx="11" cy="11" r="1"></circle>
+                <circle cx="14" cy="13" r="1"></circle>
+                <circle cx="18" cy="7" r="1"></circle>
+              </svg>
+            </button>
+            <button class="theme-toggle" data-theme-toggle aria-label="Switch to dark mode">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            </button>
+          </div>
+        </nav>
+      </section>
+      <section class="results">
+        <div id="results__inner" class="results__inner">Results will appear here</div>
+      </section>
     </main>
-    <footer>
-      <div>
-        <p>&copy; 2026 Jonathan Brierley</p>
+    <footer class="footer">
+      <div class="footer__inner">
+        <p class="footer__copy">&copy; 2026 Jonathan Brierley</p>
       </div>
     </footer>
     <script src="{{ url_for('static', filename='script.js') }}"></script>

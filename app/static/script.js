@@ -1,32 +1,34 @@
-const index_levels_btn = document.getElementById("index-levels-btn");
-const portfolio_performance_btn = document.getElementById("portfolio-performance-btn");
-const active_return_btn = document.getElementById("active-return-btn");
-const results_section = document.getElementById("results");
+const indexLevelsBtn = document.getElementById("index-levels-btn");
+const portfolioPerformanceBtn = document.getElementById("portfolio-performance-btn");
+const activeReturnBtn = document.getElementById("active-return-btn");
+const resultsSection = document.getElementById("results__inner");
 
 async function getData(url) {
   try {
     const response = await fetch(url);
+
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
     }
 
     const result = await response.json();
-    return result;
+    return { status: "ok", data: result.data };
   } catch (error) {
     console.error(error.message);
+    return { status: "error", message: error.message };
   }
 }
 
-function renderTable({ data }) {
+function renderTable(data) {
   let th = "";
-  for (let header of Object.keys(data[0])) {
+  for (const header of Object.keys(data[0])) {
     th += `<th>${header}</th>`;
   }
 
   let rows = "";
-  for (let row of data) {
+  for (const row of data) {
     rows += "<tr>";
-    for (let value of Object.values(row)) {
+    for (const value of Object.values(row)) {
       rows += `<td>${value}</td>`;
     }
     rows += "</tr>";
@@ -35,35 +37,53 @@ function renderTable({ data }) {
   return `<table><thead><tr>${th}</tr></thead><tbody>${rows}</tbody></table>`;
 }
 
-index_levels_btn.addEventListener("click", async () => {
-  results_section.innerText = "Loading Index Levels...";
+async function loadTable(url, loadingMessage, errorLabel) {
+  resultsSection.innerText = loadingMessage;
 
-  const url = "/index-levels";
-  const data = await getData(url);
+  const result = await getData(url);
 
-  const rendered_data = renderTable(data);
+  if (result.status === "ok") {
+    resultsSection.innerHTML = renderTable(result.data);
+  } else {
+    resultsSection.innerHTML = `
+      <p>Error loading ${errorLabel}</p>
+      <p>${result.message}</p>
+    `;
+  }
+}
 
-  results_section.innerHTML = rendered_data;
+indexLevelsBtn.addEventListener("click", () => {
+  loadTable("/index-levels", "Loading Index Levels...", "Index Levels");
 });
 
-portfolio_performance_btn.addEventListener("click", async () => {
-  results_section.innerText = "Loading Portfolio Performance...";
-
-  const url = "/portfolio-performance";
-  const data = await getData(url);
-
-  const rendered_data = renderTable(data);
-
-  results_section.innerHTML = rendered_data;
+portfolioPerformanceBtn.addEventListener("click", () => {
+  loadTable("/portfolio-performance", "Loading Portfolio Performance...", "Portfolio Performance");
 });
 
-active_return_btn.addEventListener("click", async () => {
-  results_section.innerText = "Loading Active Returns...";
-
-  const url = "/active-return";
-  const data = await getData(url);
-
-  const rendered_data = renderTable(data);
-
-  results_section.innerHTML = rendered_data;
+activeReturnBtn.addEventListener("click", () => {
+  loadTable("/active-return", "Loading Active Return...", "Active Return");
 });
+
+// ===== THEME TOGGLE =====
+const toggle = document.querySelector("[data-theme-toggle]");
+const root = document.documentElement;
+let theme = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+root.setAttribute("data-theme", theme);
+updateToggleIcon();
+
+if (toggle) {
+  toggle.addEventListener("click", () => {
+    theme = theme === "dark" ? "light" : "dark";
+    root.setAttribute("data-theme", theme);
+    toggle.setAttribute("aria-label", "Switch to " + (theme === "dark" ? "light" : "dark") + " mode");
+    updateToggleIcon();
+  });
+}
+
+function updateToggleIcon() {
+  if (!toggle) return;
+  toggle.innerHTML =
+    theme === "dark"
+      ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+      : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+}
