@@ -19,7 +19,7 @@ async function getData(url) {
   }
 }
 
-function renderTable(data) {
+function renderTable(data, title) {
   let th = "";
   for (const header of Object.keys(data[0])) {
     th += `<th>${header}</th>`;
@@ -34,19 +34,19 @@ function renderTable(data) {
     rows += "</tr>";
   }
 
-  return `<table><thead><tr>${th}</tr></thead><tbody>${rows}</tbody></table>`;
+  return `<div><h2>${title}</h2></div><table><thead><tr>${th}</tr></thead><tbody>${rows}</tbody></table>`;
 }
 
-async function loadTable(url, loadingMessage, errorLabel) {
+async function loadTable(url, loadingMessage, title) {
   resultsSection.innerText = loadingMessage;
 
   const result = await getData(url);
 
   if (result.status === "ok") {
-    resultsSection.innerHTML = renderTable(result.data);
+    resultsSection.innerHTML = renderTable(result.data, title);
   } else {
     resultsSection.innerHTML = `
-      <p>Error loading ${errorLabel}</p>
+      <p>Error loading ${title}</p>
       <p>${result.message}</p>
     `;
   }
