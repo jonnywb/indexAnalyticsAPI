@@ -40,8 +40,8 @@ function renderTable(data, title) {
   let rows = "";
   for (const row of data) {
     rows += "<tr>";
-    for (const value of Object.values(row)) {
-      rows += `<td>${value ?? "-"}</td>`;
+    for (const [key, value] of Object.entries(row)) {
+      rows += `<td>${formatValue(key, value)}</td>`;
     }
     rows += "</tr>";
   }
@@ -133,6 +133,26 @@ activeReturnBtn.addEventListener("click", () => {
   indexLevelsBtn.classList.remove("active");
   portfolioPerformanceBtn.classList.remove("active");
 });
+
+/* ====== Data Formatting ==== */
+function formatValue(key, value) {
+  if (value === null) return "-";
+
+  // Percentages daily_return ,  portfolio_return ,  active_return
+  if (key === "daily_return" || key === "portfolio_return" || key === "active_return") {
+    return `${Math.round(value * 100) / 100}%`;
+  }
+
+  if (key === "index_level" || key === "market_cap") {
+    return value.toLocaleString();
+  }
+
+  if (key === "position_value") {
+    return `£${value.toLocaleString()}`;
+  }
+
+  return value;
+}
 
 /* ====== Display View ======= */
 
