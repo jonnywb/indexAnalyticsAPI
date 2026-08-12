@@ -31,3 +31,23 @@ def test_calculate_active_return_initial_return():
     calculated_active_return = calculate_active_return()
 
     assert pd.isna(calculated_active_return.iloc[0]["active_return"])
+
+def test_calculate_portfolio_performance_position_value():
+    portfolio_performance_df = calculate_portfolio_performance()
+
+    target_date = pd.Timestamp("2026-01-02")
+
+    position_value = portfolio_performance_df[portfolio_performance_df["date"] == target_date].iloc[0]['position_value']
+
+    assert position_value == pytest.approx(1002500)
+
+def test_calculate_active_return_calculated_correctly():
+    active_return_df = calculate_active_return()
+
+    target_date = pd.Timestamp("2026-01-03")
+
+    target_row = active_return_df[active_return_df["date"] == target_date].iloc[0]
+
+    expected_active_return = target_row["portfolio_return"] - target_row["daily_return"]
+
+    assert target_row["active_return"] == pytest.approx(expected_active_return)
