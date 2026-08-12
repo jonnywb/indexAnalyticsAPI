@@ -2,6 +2,14 @@ const indexLevelsBtn = document.getElementById("index-levels-btn");
 const portfolioPerformanceBtn = document.getElementById("portfolio-performance-btn");
 const activeReturnBtn = document.getElementById("active-return-btn");
 const resultsSection = document.getElementById("results__inner");
+const graphBtn = document.getElementById("graph-btn");
+const tableBtn = document.getElementById("table-btn");
+
+/* ====== Data Display ===== */
+let currMetricKey = "index_level";
+let currURL = "/index-levels";
+let currLoadingMessage = "Loading Index Levels...";
+let currTitle = "Index Levels";
 
 async function getData(url) {
   try {
@@ -20,6 +28,10 @@ async function getData(url) {
 }
 
 function renderTable(data, title) {
+  if (data.length === 0) {
+    return "No data to display";
+  }
+
   let th = "";
   for (const header of Object.keys(data[0])) {
     th += `<th>${header}</th>`;
@@ -29,7 +41,7 @@ function renderTable(data, title) {
   for (const row of data) {
     rows += "<tr>";
     for (const value of Object.values(row)) {
-      rows += `<td>${value}</td>`;
+      rows += `<td>${value ?? "-"}</td>`;
     }
     rows += "</tr>";
   }
@@ -37,13 +49,47 @@ function renderTable(data, title) {
   return `<div><h2>${title}</h2></div><table><thead><tr>${th}</tr></thead><tbody>${rows}</tbody></table>`;
 }
 
-async function loadTable(url, loadingMessage, title) {
+function renderGraph(data, metricKey) {
+  const datesArr = [];
+  const yValues = [];
+  for (const row of data) {
+    datesArr.push(row["date"]);
+    yValues.push(row[metricKey]);
+  }
+
+  return { canvas: `<canvas id="index-chart"></canvas>`, datesArr, yValues };
+}
+
+function createCanvas(canvas, datesArr, yValues, title) {
+  resultsSection.innerHTML = canvas;
+  const chartCanvas = document.getElementById("index-chart");
+  const ctx = chartCanvas.getContext("2d");
+  return new Chart(ctx, {
+    type: "line",
+    data: {
+      labels: datesArr,
+      datasets: [
+        {
+          label: title,
+          data: yValues,
+        },
+      ],
+    },
+  });
+}
+
+async function loadResults(url, loadingMessage, title) {
   resultsSection.innerText = loadingMessage;
 
   const result = await getData(url);
 
   if (result.status === "ok") {
-    resultsSection.innerHTML = renderTable(result.data, title);
+    if (view === "table") {
+      resultsSection.innerHTML = renderTable(result.data, title);
+    } else {
+      const { canvas, datesArr, yValues } = renderGraph(result.data, currMetricKey);
+      createCanvas(canvas, datesArr, yValues, title);
+    }
   } else {
     resultsSection.innerHTML = `
       <p>Error loading ${title}</p>
@@ -53,15 +99,59 @@ async function loadTable(url, loadingMessage, title) {
 }
 
 indexLevelsBtn.addEventListener("click", () => {
-  loadTable("/index-levels", "Loading Index Levels...", "Index Levels");
+  currMetricKey = "index_level";
+  currURL = "/index-levels";
+  currLoadingMessage = "Loading Index Levels...";
+  currTitle = "Index Levels";
+  loadResults(currURL, currLoadingMessage, currTitle);
+
+  indexLevelsBtn.classList.add("active");
+  portfolioPerformanceBtn.classList.remove("active");
+  activeReturnBtn.classList.remove("active");
 });
 
 portfolioPerformanceBtn.addEventListener("click", () => {
-  loadTable("/portfolio-performance", "Loading Portfolio Performance...", "Portfolio Performance");
+  currMetricKey = "position_value";
+  currURL = "/portfolio-performance";
+  currLoadingMessage = "Loading Portfolio Performance...";
+  currTitle = "Portfolio Performance";
+  loadResults(currURL, currLoadingMessage, currTitle);
+
+  portfolioPerformanceBtn.classList.add("active");
+  indexLevelsBtn.classList.remove("active");
+  activeReturnBtn.classList.remove("active");
 });
 
 activeReturnBtn.addEventListener("click", () => {
-  loadTable("/active-return", "Loading Active Return...", "Active Return");
+  currMetricKey = "active_return";
+  currURL = "/active-return";
+  currLoadingMessage = "Loading Active Return...";
+  currTitle = "Active Return";
+  loadResults(currURL, currLoadingMessage, currTitle);
+
+  activeReturnBtn.classList.add("active");
+  indexLevelsBtn.classList.remove("active");
+  portfolioPerformanceBtn.classList.remove("active");
+});
+
+/* ====== Display View ======= */
+
+let view = "table";
+
+graphBtn.addEventListener("click", () => {
+  view = "graph";
+  loadResults(currURL, currLoadingMessage, currTitle);
+
+  graphBtn.classList.add("active");
+  tableBtn.classList.remove("active");
+});
+
+tableBtn.addEventListener("click", () => {
+  view = "table";
+  loadResults(currURL, currLoadingMessage, currTitle);
+
+  tableBtn.classList.add("active");
+  graphBtn.classList.remove("active");
 });
 
 // ===== THEME TOGGLE =====

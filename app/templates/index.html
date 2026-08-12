@@ -21,6 +21,9 @@
     <!-- Styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+
+    <!--Scripts-->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
     <header class="header">
@@ -58,12 +61,12 @@
       <section class="nav_bar">
         <nav class="nav">
           <div class="nav__buttons">
-            <button id="index-levels-btn" class="nav-btn">Index Levels</button>
+            <button id="index-levels-btn" class="nav-btn active">Index Levels</button>
             <button id="portfolio-performance-btn" class="nav-btn">Portfolio Performance</button>
             <button id="active-return-btn" class="nav-btn">Active Return</button>
           </div>
           <div class="nav__controls">
-            <button class="control-btn table-btn" aria-label="Switch to Table Mode">
+            <button id="table-btn" class="control-btn active" aria-label="Switch to Table Mode">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -82,7 +85,7 @@
                 <path d="M15 5v14"></path>
               </svg>
             </button>
-            <button class="control-btn graph-btn" aria-label="Switch to Graph Mode">
+            <button id="graph-btn" class="control-btn" aria-label="Switch to Graph Mode">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"

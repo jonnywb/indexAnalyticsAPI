@@ -213,11 +213,16 @@
   margin-inline: auto;
   width: 100%;
   align-items: center;
+  gap: var(--space-8);
 }
 
 .nav__buttons {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+}
+
+.nav__buttons .active {
+  border: 1px solid var(--color-primary);
 }
 
 .nav-btn {
@@ -258,6 +263,11 @@
 .control-btn:hover {
   color: var(--color-text);
   background: var(--color-surface-offset);
+}
+
+.nav__controls .active {
+  color: var(--color-text-bright);
+  background: var(--color-primary);
 }
 
 /* ======== Results ======= */
@@ -326,12 +336,6 @@ table {
 /* ===== Mobile ======= */
 
 @media (max-width: 768px) {
-  .header {
-  }
-
-  .hero {
-  }
-
   .hero__inner {
     grid-template-columns: 1fr;
   }
