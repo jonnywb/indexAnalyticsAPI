@@ -1,19 +1,41 @@
-## What it does
+# Index Analytics Dashboard
 
-This is a small Flask API for simple index and portfolio analytics.
+A small Flask dashboard that calculates and displays benchmark index levels, portfolio performance, and active return using sample financial data.
 
-It loads sample constituent, price, and portfolio data, then calculates index levels, portfolio performance, and active return.
+This project was built as a junior developer practice project to demonstrate Python, pandas, Flask, pytest, JavaScript, and Chart.js in a finance-style analytics workflow. It focuses on taking simple constituent, price, and portfolio data, turning that data into useful calculations, and presenting the results in both table and graph form.
 
-## Endpoints
+## Features
 
-- `/index-levels` returns daily market cap, index level, and benchmark daily return
-- `/portfolio-performance` returns daily portfolio value and portfolio return
-- `/active-return` returns portfolio return, benchmark return, and active return
+- Calculate market capitalisation and index weights for benchmark constituents
+- Build a simple market-cap-weighted index level over time
+- Calculate daily portfolio value from holdings and prices
+- Calculate portfolio return over time
+- Calculate active return versus the benchmark
+- Validate price data and test core calculations with pytest
+- View results in either table or graph mode
+- Toggle between light and dark theme
 
-## Running locally
+## Tech stack
 
-Create and activate a virtual environment, install the requirements, then run the Flask app.
+- Python
+- Flask
+- pandas
+- pytest
+- HTML
+- CSS
+- JavaScript
+- Chart.js
 
-## Tests
+## Project structure
 
-Run `python -m pytest` from the project root to run the test suite.
+```text
+app/
+  services/
+  routes.py
+data/
+tests/
+static/
+templates/
+run.py
+README.md
+```
