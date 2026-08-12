@@ -10,6 +10,7 @@ let currMetricKey = "index_level";
 let currURL = "/index-levels";
 let currLoadingMessage = "Loading Index Levels...";
 let currTitle = "Index Levels";
+let chart;
 
 async function getData(url) {
   try {
@@ -61,10 +62,13 @@ function renderGraph(data, metricKey) {
 }
 
 function createCanvas(canvas, datesArr, yValues, title) {
+  if (chart) chart.destroy();
+
   resultsSection.innerHTML = canvas;
   const chartCanvas = document.getElementById("index-chart");
   const ctx = chartCanvas.getContext("2d");
-  return new Chart(ctx, {
+
+  chart = new Chart(ctx, {
     type: "line",
     data: {
       labels: datesArr,
@@ -96,6 +100,8 @@ function createCanvas(canvas, datesArr, yValues, title) {
       },
     },
   });
+
+  return chart;
 }
 
 async function loadResults(url, loadingMessage, title) {
