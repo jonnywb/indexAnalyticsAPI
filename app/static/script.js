@@ -75,6 +75,17 @@ function createCanvas(canvas, datesArr, yValues, title) {
         },
       ],
     },
+    options: {
+      scales: {
+        y: {
+          ticks: {
+            callback(value) {
+              return formatValue(currMetricKey, value);
+            },
+          },
+        },
+      },
+    },
   });
 }
 
@@ -140,7 +151,7 @@ function formatValue(key, value) {
 
   // Percentages daily_return ,  portfolio_return ,  active_return
   if (key === "daily_return" || key === "portfolio_return" || key === "active_return") {
-    return `${Math.round(value * 100) / 100}%`;
+    return `${Math.round(value * 1000) / 1000}%`;
   }
 
   if (key === "index_level" || key === "market_cap") {
